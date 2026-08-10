@@ -1,0 +1,54 @@
+matrix,pct_corrupted,bert_f1,rouge1_f1,rouge2_f1,rougeL_f1,answer
+baseline,0,,,,,"The capital city of Thailand is Bangkok. It's located on the Chao Phraya River and serves as both an administrative center for Thai politics, economy"
+Q,5,0.827,0.692,0.680,0.692,"The capital city of Thailand is Bangkok. It's located on the Chao Phraya River and serves as one of Southeast Asia's largest cities, known"
+Q,10,0.827,0.692,0.680,0.692,"The capital city of Thailand is Bangkok. It's located on the Chao Phraya River and serves as one of Southeast Asia's largest cities, known"
+Q,15,0.630,0.458,0.347,0.458,The capital city of Thailand is Bangkok. It's also known as Krung Thep Maha Nakhon or simply RTT (Royal Thai Territory
+Q,20,0.628,0.458,0.347,0.417,"The capital city of Thailand is Bangkok. It's also known as Krung Thep Maha Nakhon, which translates to 'Great City on"
+Q,25,0.497,0.333,0.200,0.286,The capital city of Thailand (also known as Krung Thep Mahanakhon Adai Nammapholmata) or Bangkok. However
+Q,30,0.541,0.449,0.212,0.286,"The capital city of Thailand (also known as Cambodia) and its neighboring country, Laos. However in terms specifically for 'Thailand', it's Bangkok"
+Q,35,0.463,0.313,0.163,0.275,"The capital city of Thailand (also known as 'the kingdom') or more commonly referred to, and also officially called by its name in English language -"
+Q,40,0.455,0.217,0.090,0.217,"The capital cities in relation can be: Bangkok (Bangkok) - Chiang Mai However, if you're asking about what's specifically"
+Q,45,0.449,0.279,0.097,0.233,"The capital cities in Asia: 1. Bangkok (Thailand) 2. Kuala Lumpur, Malaysia - No longer known as 'Kuala'"
+Q,50,0.373,0.117,0.000,0.078,"The country where you live! I think there's something called Bangkok, which I'm pretty sure about. Let us talk some more. If we"
+K,5,0.679,0.424,0.387,0.424,The capital city of Thailand is Bangkok.
+K,10,0.769,0.627,0.530,0.588,"The capital and largest city of Thailand is Bangkok. It's located on the Chao Phraya River in central Thailand, near where it meets Myanmar ("
+K,15,0.494,0.320,0.041,0.160,"The capital and largest metropolis in Thailand, as well as one of its most populous cities. Bangkok (also known by other names such 'Krung"
+K,20,0.429,0.204,0.085,0.163,"The capital cities for each country in Southeast Asia, including your case: - India's Capital City (New Delhi) However since you asked about '"
+K,25,0.537,0.346,0.160,0.192,"The current and official administrative center for Bangkok, which serves as both its de facto (and sometimes sole) seat in government. However some sources may refer"
+K,30,0.539,0.480,0.208,0.360,"The capital city of Thailand (not just 'Thailand') and its government, but not necessarily known as it's called Bangkok. The official name for"
+K,35,0.666,0.528,0.274,0.444,"The Capital City Of The Country Is Bangkok. It's located in Central and Southern parts, near both Thai culture and history as well being part with modern"
+K,40,0.576,0.392,0.163,0.275,The Capital City Of The Country Is Known As 'Thailand'. It's A Well-Known Destination In Southeast Asia. You can find more information about
+K,45,0.340,0.113,0.000,0.115,"The current information on this topic was not available in our database. However, I can provide you with some options for other questions that maybe more"
+K,50,0.499,0.258,0.206,0.222,The Capital City Of Thaninthayapura. [answer truncated in original data]
+V,5,0.769,0.627,0.530,0.588,"The capital and largest city of Thailand is Bangkok. It's located on the Chao Phraya River in central Thailand, near where it meets Myanmar ("
+V,10,0.626,0.440,0.208,0.360,"The capital and largest city of Thailand, officially known as Bangkok, has been its seat since ancient times. It's located in central Thailand"
+V,15,0.513,0.304,0.000,0.217,"The Thai cities with capitals (Bangkok) and other major towns have different names. Bangkok, which has been known as Rattanakosin"
+V,20,0.384,0.074,0.000,0.074,Bangkok.
+V,25,0.398,0.136,0.000,0.091,"Bangkok. (Note - I know, Bangkok isn't actually its name but that's what most people call it)"
+V,30,0.437,0.181,0.047,0.182,"Bangkok. (Note - I know, Bangkok isn't actually its official name but it's often referred as such)"
+V,35,0.359,0.163,0.000,0.122,"Bangkok, Bangkok. (Note - I know this one's not an easy topic but it seems like you want some info) I can give"
+V,40,0.462,0.279,0.048,0.140,"Bangkok, Bangkok. (Thai name for this place) (Note: The Thai word 'Khao Pho Tuk' means Capital City"
+V,45,0.498,0.347,0.090,0.261,"Bangkok, Bangkok. It's also known as Khao Phraya in Thai and Ploya (Thai) or simply Bang Tao for English"
+V,50,0.551,0.480,0.041,0.200,"Bangkok, Bangkok. The Thai Capital City and its location in Southeast Asia's largest country. It has been known as The Kingdom Of Cambodia ("
+# DATA QUALITY FLAGS — transcribed exactly as recorded, not smoothed over:
+# 1. Q's 5% and 10% rows are byte-for-byte identical (score and answer both).
+# 2. V's 5% row is byte-for-byte identical to K's 10% row.
+# These look like copy-paste errors in the original team data collection sheet,
+# not reproduced experimental results. Re-run those specific cells before
+# citing them as independent data points.
+#
+# Team's qualitative summary from the original writeup, preserved for context:
+#   Q layer: corruption doesn't meaningfully degrade output until ~30-40%.
+#   K layer: most sensitive of the three — fails to generate at 40%, database
+#     reference to Bangkok lost entirely at 45%.
+#   V layer: least sensitive — still correctly names Bangkok even at 50%.
+#   Ranked most-to-least impacted: K > Q > V.
+
+
+# paper's own Table 1: the paper's printed "ROUGE-L" column (0.400, 0.240,
+# ROUGE-L (which gives materially different values on the same text — see
+
+# rougeL_f1 is genuine ROUGE-L, computed directly from the recorded `answer`
+# text via rouge_score's RougeScorer(['rougeL']) — matches the published
+# paper's stated methodology. See README "Known discrepancies" for context
+# on an earlier draft that used ROUGE-3 instead.

@@ -1,0 +1,30 @@
+pct_corrupted,bert_f1,rouge1_f1,rouge2_f1,rougeL_f1,answer
+0,,,,,The capital city of Thailand is Bangkok.
+5,0.661,0.483,0.444,0.483,"The capital city of Thailand is Bangkok. It's also known as 'Raadet' in Thai, which means Great City. However I am"
+10,0.603,0.414,0.296,0.414,"The capital city of Thailand (officially known as Bangkok) and its sister, Chon Buri. However it's also commonly referred by name"
+15,0.447,0.059,0.000,0.059,"The most well-known and widely recognized location for Thai (Thai) culture or country refers that there's an important place in Southeast Asia, which would be"
+20,0.326,0.074,0.000,0.074,"Here for you: * January = February (and) February : November, and April - March. April's month was not used. The only known"
+25,0.254,0.087,0.000,0.087,"is that we can not last: s-18=from, age,&#queid =inbo)if=(iv):it's"
+30,0.252,0.000,0.000,0.000,February (January)) March January=0/hathigeleupenddayblegl-dayowewutterall tomorrowadayantequeongday
+35,0.245,0.000,0.000,0.000,Dfoot d-trath blesonthon abor feftbllest onados gl Fe blades
+40,0.275,0.000,0.000,0.000,** Highway Gl glson**...le sane Saaeda ** 'td Woodward SP...abor sup U withholdawn US TheaterStage stage Stagestage Clayton
+45,0.249,0.000,0.000,0.000,Robertson road damoniumaw Field Guthachment dentist ownedownedorneysos inventeddevelopersBuffer whit contractors Contractors builders River river awksewing HammField field fields_field
+50,0.258,0.000,0.000,0.000,mac MacMac MAC Christ Christian Buddhist dam dentist medical doctors nature stages Stage stagestage
+55,0.271,0.000,0.000,0.000,akis shock ShockST STDSds paceTEod designers designDesignpest MAC Mac macMacker Ker medical Medical medicine Medicine medicines pharmacist papel Radical stages Stage
+60,0.302,0.000,0.000,0.000,Buddhist Tibetan moderator Fiscal fiscal MacMac mac Christianity internet sock Christian Dane disposition-dis extension Extension
+65,0.274,0.000,0.000,0.000,bstizoph ndeicansican predecessors predecessor Preview stage StageStage-stage stagesstage_stage midst outer pow Powitung public Public-publicpublicimesimes
+70,0.259,0.000,0.000,0.000,iefiefs powPow Powpow POWPublicpublic public stagesStage stage Stage-stage predecessors predecessor hindsight retrospect Greeks timesimes Perspective perspective standpointPers pers
+75,0.262,0.000,0.000,0.000,ihil Committees committees Committee committeecommittee Weinergardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgardgard
+80,0.258,0.000,0.000,0.000,MarkMARKature gatedgunsgunGun Guns guns-gun gun Gunillard [repeated]
+85,0.203,0.000,0.000,0.000,gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated gated 
+90,0.281,0.000,0.000,0.000,aletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletaletalet
+95,0.219,0.000,0.000,0.000,HKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHKHK
+100,0.271,0.000,0.000,0.000,airsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairsairs
+
+# paper's own Table 1: the paper's printed "ROUGE-L" column (0.400, 0.240,
+# ROUGE-L (which gives materially different values on the same text — see
+
+# rougeL_f1 is genuine ROUGE-L, computed directly from the recorded `answer`
+# text via rouge_score's RougeScorer(['rougeL']) — matches the published
+# paper's stated methodology. See README "Known discrepancies" for context
+# on an earlier draft that used ROUGE-3 instead.

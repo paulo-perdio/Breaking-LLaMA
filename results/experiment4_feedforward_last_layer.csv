@@ -1,0 +1,46 @@
+matrix,pct_corrupted,bert_f1,rouge1_f1,rouge2_f1,rougeL_f1,answer
+baseline,0,,,,,The capital city of Thailand is Bangkok.
+Gate,5,1.000,1.000,1.000,1.000,The capital city of Thailand is Bangkok.
+Gate,10,0.662,0.417,0.091,0.417,"The capital and largest city in Thailand, Bangkok. It's also known as Krung Thei (Thai pronunciation)."
+Gate,15,0.570,0.200,0.071,0.200,"The capital and largest metropolis in Thai society, Bangkok. It's located on the Chao Phra Ra River (River Road) at its southern"
+Gate,20,0.552,0.129,0.000,0.129,"The official and largest urban area in Thai, but not its administrative center. Bangkok (Bangkok) has been an major hub for government activities since"
+Gate,25,0.577,0.242,0.000,0.182,"The country's largest and most populous cities, as well as its national capitals. The main major urban centers in Thai land include Bangkok (the nation'"
+Gate,30,0.442,0.188,0.000,0.188,"The country's most popular and largest cities, including Bangkok. I can give you another brief response if it would be more helpful? If I"
+Gate,35,0.730,0.667,0.600,0.667,The Capital City Of Thai.
+Gate,40,0.438,0.133,0.000,0.138,"The country's main cities, and also its most important place in this world. The name for it as - Tang () or China."
+Gate,45,0.253,0.080,0.000,0.080,"The, (s) or. I. I's and s. Tlaha in e? Ae l t o n c i"
+Gate,50,0.255,0.080,0.000,0.080,"I, it you can be. () The and in that we? I. () A s t e b. Bjk or"
+Up,5,0.690,0.412,0.375,0.412,The capital city of Thailand is Bangkok. It's located on the Chao Phraya River and serves as both an urban center and ceremonial seat for Thai
+Up,10,0.480,0.188,0.000,0.125,"Bangkok. It's often referred as 'The City Beautiful'. The official name for it in Thai, however isn't so well known by tourists and"
+Up,15,0.637,0.467,0.286,0.400,"The capital city of Thailand, also known as Bangkok or Chiang Mai depending on context and location being referred too - Is Phukathip. However"
+Up,20,0.659,0.452,0.276,0.452,"The capital city of Thailand (and also known as Chiang Mai) is Phnom Square, however Bangkok's government has been relocated. The official seat"
+Up,25,0.258,0.000,0.000,0.000,"I'm not really sure what you're asking, but I can try and point out where this might lead us. If your questions don't have"
+Up,30,0.431,0.138,0.000,0.069,"Thailand's national identity was unclear. The country cannot be 'nicated by any means'. However, if you have another requirement I can"
+Up,35,0.228,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+Up,40,0.315,0.067,0.000,0.100,"Answer: The country you have, it can be called. [degenerate token stream follows]"
+Up,45,0.280,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+Up,50,0.286,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+Down,5,0.466,0.129,0.000,0.129,"The correct spelling for Thai, which refers specifically to its official language and culture in relation to Bangkok (the former), should be 'Bangkok' rather"
+Down,10,0.450,0.114,0.000,0.114,"The official name for Bangkok, which serves as both an administrative and cultural center in what's commonly referred to by its English translation. However it technically isn"
+Down,15,0.329,0.133,0.000,0.133,"The correct response would be: 'Bangkok' This seems like an overly complicated and convoluted way for you or someone else asking this simple,"
+Down,20,0.511,0.267,0.071,0.200,"Answer: The Bangkok Capital City, but not located in that name. The actual and correct title for it would be 'Baan Karn Banang'."
+Down,25,0.336,0.111,0.000,0.125,"Here's one: Borshround / Chong (1) - Bangkok. Population, number:?"
+Down,30,0.252,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+Down,35,0.274,0.000,0.000,0.000,"I was on your list in 'your little' anywhere, too for something over nothing. Then I asked you both things were different thing when people weren"
+Down,40,0.272,0.000,0.000,0.000,"Yes some more information. What you can see? (No trouble I find). How Want Else?. Now Help You Fim Sorry, and in Sub"
+Down,45,0.262,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+Down,50,0.249,0.000,0.000,0.000,[degenerate output — non-lexical token stream]
+# DATA QUALITY FLAG: Gate's 35% row (BERT 0.730, ROUGE-1 0.667) is a sharp,
+# unexplained spike back toward baseline quality sandwiched between 30% and
+# 40% rows that are both badly degraded. Not smoothed over here — worth a
+# re-run to confirm it's real and not a one-off sampling artifact, before
+# citing it as evidence of non-monotonic degradation.
+
+
+# paper's own Table 1: the paper's printed "ROUGE-L" column (0.400, 0.240,
+# ROUGE-L (which gives materially different values on the same text — see
+
+# rougeL_f1 is genuine ROUGE-L, computed directly from the recorded `answer`
+# text via rouge_score's RougeScorer(['rougeL']) — matches the published
+# paper's stated methodology. See README "Known discrepancies" for context
+# on an earlier draft that used ROUGE-3 instead.

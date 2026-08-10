@@ -1,0 +1,26 @@
+layer,bert_f1,rouge1_f1,rouge2_f1,rougeL_f1,answer
+baseline,,,,,"The capital city of Thailand is Bangkok. It's located on the Chao Phraya River and serves as both an administrative center for Thai politics, economy"
+1,0.453,0.280,0.125,0.200,"The Capital City (also known as Theatap) or sometimes referred in other contexts, but commonly called by many people and others. It's also"
+2,0.533,0.333,0.176,0.278,The Capital City Of The United Kingdom Is London. (Answer)
+3,0.315,0.160,0.000,0.120,"I've got this: The main questions I can provide, though my knowledge cut on March. 1. What does it mean? 2. Who's"
+4,0.496,0.333,0.100,0.238,"The Capital City (Majar) and Government Department, Mardi. The official name for 'Thailand' in English. Government"
+5,0.356,0.166,0.000,0.167,"The correct response would be: 'Thailand' (As for that knowledge date, I'm not sure if you're using this information) I"
+6,0.370,0.212,0.000,0.170,"The correct response would be: Bangkok, or The long-term Answer for this Question could Be Is Bangkao (or) Or perhaps"
+7,0.340,0.196,0.000,0.157,"The country with which we have just been discussing? Is it Bangkok or Jakarta, and if so what would you say. (a bit more difficult)"
+8,0.343,0.226,0.000,0.113,"I made for at any time, but before I was an hour long on it. The following have been with you and your friends in China too"
+9,0.355,0.160,0.000,0.120,"The most accurate information I have on my time, was from an ancient text (2000-AD) - The first known world power in this area"
+10,0.378,0.150,0.039,0.113,"I'll be your name, but it's just one more thing... I'm here with my wife in Bangkok. Our daughter was at home and she"
+11,0.344,0.133,0.046,0.133,"The most common response would be: Mandhut (or Mandahit) However, I'm not sure what it's called. I"
+12,0.530,0.384,0.080,0.231,"The capital of Thailand, and also known as 'the world's most expensive shopping mall', would be Bangkok. However in recent years it has been Ph"
+13,0.386,0.200,0.000,0.120,"'Which country has its most representative and important location, which also holds many national symbols.' (The Philippines) or 'The nation with an average number'"
+14,0.374,0.260,0.000,0.174,"Here's an informal response: 'Thailand, where in Bangkok?' Or maybe it could be as well Chockon or Cog like."
+15,0.509,0.261,0.000,0.245,"The Capital City Of Thail. Bangkok, Thai's own hometown with its famous street name being Buri Dusanka in English; however it has"
+16,0.390,0.274,0.122,0.235,The Capital City Of Thaion This Is A Short Answer That Will Be Given To You By The Time I Arrive On Your Pragmas In
+
+# paper's own Table 1: the paper's printed "ROUGE-L" column (0.400, 0.240,
+# ROUGE-L (which gives materially different values on the same text — see
+
+# rougeL_f1 is genuine ROUGE-L, computed directly from the recorded `answer`
+# text via rouge_score's RougeScorer(['rougeL']) — matches the published
+# paper's stated methodology. See README "Known discrepancies" for context
+# on an earlier draft that used ROUGE-3 instead.

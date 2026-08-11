@@ -32,6 +32,39 @@ even overall shape here as anecdote, not proof — see the next section for
 a concrete case where this single example doesn't cleanly reproduce a
 paper claim.
 
+## The real dataset — added, but not executed at full scale
+
+`data/glue-qnli-1000.csv` is the actual 1,000-question GLUE-QNLI sample the
+paper used (Section 2.2) — verified: 1,000 unique rows, no empty fields,
+`question`/`sentence`/`index` columns matching QNLI's format.
+
+`run_experiment.py` supports a `--dataset` batch mode implementing the
+paper's actual aggregate methodology (Section 2.4: generate all baselines
+uncorrupted, corrupt, generate all again, average BERT/ROUGE-L F1 across
+every question). A 10-question validation run confirmed this works
+end-to-end against the real gated model (see "Small-scale validation run"
+below) — the full 1,000-question run was not attempted due to local disk
+space and compute time constraints. `results/*.csv` remains the
+single-example illustration described below, not the full aggregate.
+
+## Small-scale validation run (n=10)
+
+To confirm the batch pipeline works end-to-end against the real gated
+model and real dataset, we ran `p=0.15` on the first 10 questions in
+`data/glue-qnli-1000.csv` (`results/test_run_p15.csv`). Averaged over
+those 10 questions: BERT F1 ≈ 0.33, ROUGE-1 ≈ 0.11, ROUGE-2 ≈ 0.005,
+ROUGE-L ≈ 0.09 — a real degradation pattern, qualitatively consistent
+with the direction the paper describes at this corruption level.
+
+This is a pipeline sanity check, not a statistical reproduction of the
+paper. Ten questions has no statistical power against the paper's real
+~1,000-question aggregate, and the full run was not attempted here due
+to local disk space and compute time constraints. Two independent runs
+at the same setting (no fixed seed, so generation differs each time)
+produced close averages (BERT F1 0.319 vs. 0.332, ROUGE-L 0.088 vs.
+0.090) — reassuring for pipeline stability, but still not a substitute
+for the real aggregate.
+
 ## Headline finding — and a real caveat found while recomputing ROUGE-L
 
 Paper's claim: the Feed-Forward Down-projection matrix is the single most
@@ -84,21 +117,24 @@ person in their own Colab copy of the same notebook" — not "via this CLI."
 
 ## Repo structure
 
-```
+​```
 src/
   corrupt.py           # the corruption function (single implementation)
   metrics.py            # BERTScore + ROUGE evaluation
   run_experiment.py     # CLI reproducing any of the paper's 4 experiments
+data/
+  glue-qnli-1000.csv    # the real 1,000-question dataset the paper used
 results/
   experiment1_global_corruption.csv         # global sweep, 5-100%, John Paul
   experiment2_per_layer_15pct.csv           # per-layer sweep @ 15%, Anon
   experiment2_1_per_layer_10pct.csv         # per-layer sweep @ 10%, Phalat
   experiment3_self_attention_last_layer.csv # Q/K/V @ last layer, 5-50%, Phalat
   experiment4_feedforward_last_layer.csv    # Gate/Up/Down @ last layer, 5-50%, Kaung Khant
+  test_run_p15.csv                          # n=10 validation run, see "Small-scale validation run"
 notebooks/
   original_exploratory_notebook.py    # the actual notebook used for real runs (token redacted)
   scoring_smoke_test_corrected.py     # a second notebook variant with a scoring bug, fixed here — see "Known discrepancies"
-```
+​```
 
 Experiments 2–4 were run through 50% corruption, not the full 0–100% range —
 that was a deliberate scope decision by the team, not missing data.
@@ -115,6 +151,7 @@ script:
 | 2 — Per-layer | All 6 matrices, one layer at a time | `python -m src.run_experiment --layers 4 --matrices all --p 0.15` |
 | 3 — Self-attention | Q/K/V only | `python -m src.run_experiment --layers 15 --matrices self_attn --p 0.20` |
 | 4 — Feed-forward | Gate/Up/Down only | `python -m src.run_experiment --layers 15 --matrices feed_forward --p 0.20` |
+| Full aggregate | Any config, all 1,000 questions | add `--dataset data/glue-qnli-1000.csv --output results/my_run.csv` to any of the above |
 
 ## Setup
 
@@ -135,6 +172,13 @@ will never be committed.
 Corruption is stochastic and unseeded by default, matching how the original
 experiments were run — pass `--seed N` to `run_experiment.py` for a
 reproducible run instead.
+
+Running any experiment also downloads BERTScore's backbone model
+(`bert-base-uncased`, ~420MB) on first use, on top of Llama-3.2-1B itself
+(~2.5GB). Make sure you have at least 3–4GB of genuinely free disk space
+before starting — a near-full system drive can cause the download to fail
+partway through with a confusing error rather than a clear "disk full"
+message.
 
 ## Known discrepancies (documented for reproducibility, not hidden)
 

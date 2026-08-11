@@ -1,19 +1,28 @@
 """
 CLI to reproduce any of the paper's four experiments.
 
-Usage examples
----------------
-# Experiment 1: global sweep, all layers/matrices, single corruption level
-python -m src.run_experiment --layers all --matrices all --p 0.15
+Single-question mode (matches the illustrative examples in results/*.csv
+and the paper's Table 1):
+  python -m src.run_experiment --layers all --matrices all --p 0.15
 
-# Experiment 2: single layer (0-indexed; paper's "Layer 5" == --layers 4)
-python -m src.run_experiment --layers 4 --matrices all --p 0.15
+Batch mode over the full dataset (matches the paper's actual aggregate
+methodology, Section 2.4 — averages BERT/ROUGE-L F1 across many questions):
+  python -m src.run_experiment --layers all --matrices all --p 0.15 --dataset data/glue-qnli-1000.csv --output results/my_run.csv
 
-# Experiment 3: self-attention only, last layer
-python -m src.run_experiment --layers 15 --matrices q,k,v --p 0.20
+--dataset expects a CSV with a `question` column (index/sentence columns,
+if present, are ignored — the paper does not use QNLI's provided answers
+or context sentences as input, only the questions themselves; Section 2.2).
+Use --limit N to test on a small subset before committing to a full,
+slow 1,000-question run.
 
-# Experiment 4: feed-forward only, last layer
-python -m src.run_experiment --layers 15 --matrices gate,up,down --p 0.20
+NOTE on scope: this CLI did not exist during the actual research (see
+README "How this code relates to how the research was actually done") and
+has not been used to reproduce the paper's real aggregate numbers — running
+it requires a personally-approved Hugging Face token for the gated
+meta-llama/Llama-3.2-1B-Instruct model and non-trivial GPU time for the
+full 1,000-question dataset, neither of which is available in an automated
+sandbox. This code makes that reproduction *possible*, not something
+already done.
 
 Requires HF_TOKEN in the environment. Reads a .env file automatically if
 present (see .env.example) — never hardcode a token in this file.
@@ -24,6 +33,7 @@ byte-identical results. Pass --seed for a reproducible run.
 """
 
 import argparse
+import csv
 import os
 from typing import cast
 
@@ -48,6 +58,7 @@ NUM_LAYERS = 16
 GENERATION_KWARGS = dict(top_k=1, repetition_penalty=1.05, max_new_tokens=30)
 
 BASELINE_QUESTION = 'Give me a short answer to the question "What is the capital city of Thailand?"'
+PROMPT_TEMPLATE = 'Give me a short answer to the question "{question}"'
 
 
 def parse_matrices(raw: str) -> tuple[str, ...]:
@@ -66,7 +77,7 @@ def parse_layers(raw: str) -> list[int]:
     return [int(x) for x in raw.split(",")]
 
 
-def generate_reply(pipe: Pipeline, messages: list[dict[str, str]]) -> str:
+def generate_reply(pipe: Pipeline, question: str) -> str:
     """Run generation and extract the assistant's text reply.
 
     Isolated in its own function with an explicit return type because
@@ -74,8 +85,52 @@ def generate_reply(pipe: Pipeline, messages: list[dict[str, str]]) -> str:
     task), which otherwise causes type-checker errors on chained indexing
     like `pipe(...)[0]["generated_text"][-1]["content"]` at every call site.
     """
+    messages = [
+        {"role": "system", "content": "You are useful assistance!"},
+        {"role": "user", "content": question},
+    ]
     result = pipe(messages, **GENERATION_KWARGS)
     return cast(str, result[0]["generated_text"][-1]["content"])
+
+
+def load_questions(dataset_path: str, limit: int | None) -> list[str]:
+    with open(dataset_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        if "question" not in (reader.fieldnames or []):
+            raise ValueError(f"{dataset_path} has no 'question' column (found: {reader.fieldnames})")
+        rows = list(reader)
+    if limit is not None:
+        rows = rows[:limit]
+    return [PROMPT_TEMPLATE.format(question=r["question"]) for r in rows]
+
+
+def run_batch(pipe: Pipeline, model, layers: list[int], matrices: tuple[str, ...], p: float, questions: list[str], output_path: str | None) -> None:
+    print(f"Generating {len(questions)} baseline answers (uncorrupted model)...")
+    baselines = [generate_reply(pipe, q) for q in questions]
+
+    print(f"Corrupting model: p={p} layers={layers} matrices={matrices}")
+    corrupt_model(model, p=p, layers=layers, matrices=matrices)
+
+    print(f"Generating {len(questions)} corrupted answers...")
+    all_metrics = []
+    rows_out = []
+    for question, baseline in zip(questions, baselines):
+        corrupted = generate_reply(pipe, question)
+        m = evaluate(candidate=corrupted, reference=baseline)
+        all_metrics.append(m)
+        rows_out.append({"question": question, "baseline": baseline, "corrupted": corrupted, **m})
+
+    # Per the paper's Section 2.4: report the average across all questions.
+    keys = all_metrics[0].keys()
+    averages = {k: sum(m[k] for m in all_metrics) / len(all_metrics) for k in keys}
+    print(f"Averages over {len(questions)} questions: {averages}")
+
+    if output_path:
+        with open(output_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=list(rows_out[0].keys()))
+            writer.writeheader()
+            writer.writerows(rows_out)
+        print(f"Per-question results written to {output_path}")
 
 
 def main() -> None:
@@ -83,7 +138,10 @@ def main() -> None:
     parser.add_argument("--layers", default="all", help="'all', or comma-separated 0-indexed layer indices")
     parser.add_argument("--matrices", default="all", help="'all', 'self_attn', 'feed_forward', or comma-separated q,k,v,gate,up,down")
     parser.add_argument("--p", type=float, required=True, help="corruption probability, e.g. 0.15")
-    parser.add_argument("--question", default=BASELINE_QUESTION)
+    parser.add_argument("--question", default=BASELINE_QUESTION, help="single-question mode (default)")
+    parser.add_argument("--dataset", default=None, help="path to a CSV with a 'question' column — enables batch mode over many questions")
+    parser.add_argument("--limit", type=int, default=None, help="only use the first N rows of --dataset (for a quick test before a full run)")
+    parser.add_argument("--output", default=None, help="write per-question batch results to this CSV (batch mode only)")
     parser.add_argument("--seed", type=int, default=None, help="optional, for reproducible corruption across runs")
     args = parser.parse_args()
 
@@ -96,22 +154,20 @@ def main() -> None:
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, token=hf_token)
     model = AutoModelForCausalLM.from_pretrained(MODEL_ID, token=hf_token)
-
     pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, torch_dtype=torch.bfloat16, device_map="auto")
-    messages = [
-        {"role": "system", "content": "You are useful assistance!"},
-        {"role": "user", "content": args.question},
-    ]
-    # Per the paper's methodology (Section 2.2): the baseline is the model's
-    # own uncorrupted response, not a handwritten reference answer.
-    baseline_output = generate_reply(pipe, messages)
 
     layers = parse_layers(args.layers)
     matrices = parse_matrices(args.matrices)
+
+    if args.dataset:
+        questions = load_questions(args.dataset, args.limit)
+        run_batch(pipe, model, layers, matrices, args.p, questions, args.output)
+        return
+
+    # Single-question mode (original behavior).
+    baseline_output = generate_reply(pipe, args.question)
     corrupt_model(model, p=args.p, layers=layers, matrices=matrices)
-
-    corrupted_output = generate_reply(pipe, messages)
-
+    corrupted_output = generate_reply(pipe, args.question)
     metrics = evaluate(candidate=corrupted_output, reference=baseline_output)
 
     print(f"p={args.p} layers={layers} matrices={matrices}")
